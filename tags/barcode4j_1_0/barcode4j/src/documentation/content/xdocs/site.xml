@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+
+<!--
+Forrest site.xml
+
+This file contains an outline of the site's information content.  It is used to:
+- Generate the website menus (though these can be overridden - see docs)
+- Provide semantic, location-independent aliases for internal 'site:' URIs, eg
+<link href="site:changes"> links to changes.html (or ../changes.html if in
+  subdir).
+- Provide aliases for external URLs in the external-refs section.  Eg, <link
+  href="ext:cocoon"> links to http://xml.apache.org/cocoon/ 
+
+See http://xml.apache.org/forrest/linking.html for more info
+-->
+
+<site label="Barcode" href="" xmlns="http://apache.org/forrest/linkmap/1.0" tab="home">
+
+  <about label="About">
+    <index label="Introduction" href="index.html"/>
+    <krysalis-barcode label="Important Krysalis Barcode News" href="krysalis-barcode.html"/>
+    <download label="Download" href="download.html"/>
+    <demo label="Examples" href="examples.html"/>
+    <applet label="Demo Applet" href="applet.html"/>
+    <start label="Getting started">
+      <building label="Build&#160;Barcode4J" href="building.html"/>
+      <running label="Run&#160;Barcode4J" href="running.html"/>
+    </start>  
+    <support label="Support">
+      <troubleshooting label="Troubleshooting" href="troubleshooting.html"/>
+      <faq label="FAQ" href="faq.html"/>
+      <ml label="Mailing Lists" href="ext:mailing-lists"/>
+    </support>
+    <code label="Code">
+      <viewcvs label="View CVS" href="viewcvs.html"/>
+      <javadocs label="Javadocs" href="ext:javadocs"/>
+      <!--javasrc label="Java Source Ref" href="javasrc/index.html"/-->
+      <!--checkstyle label="Code Style Checks" href="checkstyle/index.html"/-->
+      <!--junit label="Unit tests" href="junit/index.html"/-->
+    </code>
+    <changes label="Changes" href="changes.html"/>
+    <todo label="Todo" href="todo.html"/>
+    <contributors label="Hall of Fame" href="contributors.html"/>
+    <links label="Links" href="links.html"/>
+  </about>
+ 
+  <documentation label="Documentation" tab="doc">
+   <docs-overview label="Overview" href="documentation.html"/>
+   <barcode-xml label="The Barcode XML Format" href="barcode-xml.html"/>
+   <output-formats label="Output Formats" href="output-formats.html"/>
+   <design label="Design" href="design.html"/>
+   <javadocs label="Javadocs" href="ext:javadocs"/>
+   <scenarios label="Scenarios">
+     <xsl-fo label="XSL-FO" href="xsl-fo.html"/>
+     <svg-dom label="SVG DOM" href="svg-dom.html"/>
+   </scenarios>
+   <running label="Creating&#160;Barcodes">
+     <fop-ext label="...with FOP" href="fop-ext.html"/>
+     <xalan-ext label="...with Xalan-J" href="xalan-ext.html"/>
+     <saxon-ext label="...with SAXON" href="saxon-ext.html"/>
+     <servlet label="...with a Servlet" href="servlet.html"/>
+     <cli label="...from the Command Line" href="cli.html"/>
+     <embedding label="...embedding in Java (XML API)" href="embedding.html"/>
+     <embedding-bean label="...embedding in Java (Bean API)" href="embedding-bean.html"/>
+   </running>
+  </documentation>
+
+  <!-- Uncomment this if we want aggregate HTML/PDFs for this site 
+  -->
+  <pdfs label="PDFs">
+    <whole_site_html label="Whole site HTML" href="wholesite.html"/>
+    <whole_site_pdf label="Whole site PDF" href="wholesite.pdf"/>
+  </pdfs>
+
+
+  <!--subdir label="Subdir" href="subdir/">
+    <index label="Index" href="index.html"/>
+  </subdir-->
+
+  <external-refs>
+  	<mailing-lists href="http://sourceforge.net/mail/?group_id=96670"/>
+  	<javadocs href="http://barcode4j.krysalis.org/javadocs/index.html"/>
+  	<project-files href="http://sourceforge.net/project/showfiles.php?group_id=96670"/>
+  	<tarballs href="http://www.krysalis.org/tarballs/krysalis-barcode"/>
+  	<krysalis-project-files href="http://sourceforge.net/project/showfiles.php?group_id=36516"/>
+    <xml.apache.org href="http://xml.apache.org/">
+      <forrest href="forrest/">
+        <validation href="validation.html"/>
+        <webapp href="your-project.html#webapp"/>
+      </forrest>
+      <fop href="fop/"/>
+      <batik href="batik/"/>
+      <cocoon href="cocoon/"/>
+      <xalan href="xalan-j/"/>
+    </xml.apache.org>
+    <ant.apache.org href="http://ant.apache.org/"/>
+    <jakarta.apache.org href="http://jakarta.apache.org/">
+      <commons-cli href="commons/cli"/>
+    </jakarta.apache.org>
+    <java href="http://java.sun.com/"/>
+    <avalon href="http://avalon.apache.org/"/>
+    <w3.org href="http://www.w3.org/">
+      <xsl-fo href="TR/xsl/"/>
+      <svg href="Graphics/SVG"/>
+    </w3.org>
+    <saxon href="http://saxon.sourceforge.net"/>
+  </external-refs>
+
+</site>
