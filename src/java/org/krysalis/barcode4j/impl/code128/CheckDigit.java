@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 Jeremias Maerki and Dietmar Bürkle.
+ * Copyright 2005 Jeremias Maerki and Dietmar Burkle.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package org.krysalis.barcode4j.impl.code128;
 
-
 public class CheckDigit {
 
     public final static byte CDNone = 0;
@@ -24,9 +23,12 @@ public class CheckDigit {
 
     public static char calcCheckdigit(String msg, int start, int end, byte type) {
         switch (type) {
-            case CD31 :    return calcCheckdigit(3, 1, msg, start, end);
-            case CD11 :    return calcCheckdigit(1, 1, msg, start, end);
-            default : return '0';
+            case CD31:
+                return calcCheckdigit(3, 1, msg, start, end);
+            case CD11:
+                return calcCheckdigit(1, 1, msg, start, end);
+            default:
+                return '0';
         }
     }
 
@@ -37,11 +39,11 @@ public class CheckDigit {
     public static char calcCheckdigit11(String msg, int start, int end) {
         return calcCheckdigit(1, 1, msg, start, end);
     }
-    
+
     public static char calcCheckdigit(int oddMult, int evenMult, String msg, int start, int end) {
         int oddSum = 0;
         int evenSum = 0;
-        boolean even = false; 
+        boolean even = false;
         for (int i = end - 1; i >= start; i--) {
             if (even) {
                 evenSum += Character.digit(msg.charAt(i), 10);
@@ -51,7 +53,8 @@ public class CheckDigit {
             even = !even;
         }
         int check = 10 - ((evenMult * evenSum + oddMult * oddSum) % 10);
-        if (check >= 10) check = 0;
+        if (check >= 10)
+            check = 0;
         return Character.forDigit(check, 10);
     }
 

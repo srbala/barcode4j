@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 Dietmar Bürkle.
+ * Copyright 2005 Dietmar Burkle.
  * generateBarcodeLogic:
  * Copyright 2002-2004 Jeremias Maerki.
  *
@@ -25,19 +25,18 @@ import org.krysalis.barcode4j.ClassicBarcodeLogicHandler;
 /**
  * This class is an implementation of the EAN 128 barcode.
  *
- * @author Dietmar Bürkle, Jeremias Maerki (generateBarcodeLogic)
+ * @author Dietmar Burkle, Jeremias Maerki (generateBarcodeLogic)
  */
-public class EAN128LogicImpl { //extends Code128LogicImpl{
+public class EAN128LogicImpl { // extends Code128LogicImpl{
     private static final byte MAX_LENGTH = 48; // Max according to EAN128 specification.
 
     private static final byte TYPENumTestCheckDigit = 4;
     private static final byte TYPENumReplaceCheckDigit = 5;
     private static final byte TYPENumAddCheckDigit = 6;
 
-
     private EAN128AI[] ais = null;
 
-    //GroupSeperator not Code128LogicImpl.FNC_1;
+    // GroupSeperator not Code128LogicImpl.FNC_1;
     private char groupSeparator = EAN128Bean.DEFAULT_GROUP_SEPARATOR;
 
     private char checkDigitMarker = EAN128Bean.DEFAULT_CHECK_DIGIT_MARKER;
@@ -46,7 +45,7 @@ public class EAN128LogicImpl { //extends Code128LogicImpl{
     private String msgCache = null;
     private StringBuffer code128Msg = new StringBuffer(MAX_LENGTH);
     private StringBuffer humanReadableMsg = new StringBuffer(MAX_LENGTH);
-    private int[] encodedMsg = new int[]{};
+    private int[] encodedMsg = new int[] {};
     private IllegalArgumentException exception = null;
 
     private boolean checksumADD = true;
@@ -91,6 +90,7 @@ public class EAN128LogicImpl { //extends Code128LogicImpl{
 
     /**
      * Encodes a message into an array of character set indexes.
+     * 
      * @param msg the message to encode
      * @return the requested array of character set indexes
      * @see #getEncoder()
@@ -102,8 +102,9 @@ public class EAN128LogicImpl { //extends Code128LogicImpl{
 
     /**
      * Generates the barcode logic
+     * 
      * @param logic the logic handler to receive the generated events
-     * @param msg the message to encode
+     * @param msg   the message to encode
      */
     public void generateBarcodeLogic(ClassicBarcodeLogicHandler logic, String msg) {
         setMessage(msg);
@@ -114,7 +115,7 @@ public class EAN128LogicImpl { //extends Code128LogicImpl{
             c128.encodeChar(logic, encodedMsg[i]);
         }
 
-        //Calculate checksum
+        // Calculate checksum
         int checksum = encodedMsg[0];
         for (int i = 1; i < encodedMsg.length; i++) {
             checksum += i * encodedMsg[i];
@@ -127,7 +128,6 @@ public class EAN128LogicImpl { //extends Code128LogicImpl{
         logic.endBarcode();
     }
 
-
     public void addAIs(String msg) {
         int offset = 0;
         int i = 0;
@@ -139,8 +139,7 @@ public class EAN128LogicImpl { //extends Code128LogicImpl{
                 try {
                     ai = ais[i++];
                 } catch (IndexOutOfBoundsException e) {
-                    throw getException("Message has more AIs than template (template has "
-                            + ais.length + ")");
+                    throw getException("Message has more AIs than template (template has " + ais.length + ")");
                 }
             }
             offset = addAI(msg, offset, ai);
@@ -174,7 +173,7 @@ public class EAN128LogicImpl { //extends Code128LogicImpl{
             throw getException(e.getMessage());
         }
         byte lenID = ai.lenID;
-//        byte type = ai.type[0];
+        // byte type = ai.type[0];
         byte lenMin = ai.lenMinAll;
         byte lenMax = ai.lenMaxAll;
 
@@ -182,29 +181,27 @@ public class EAN128LogicImpl { //extends Code128LogicImpl{
             humanReadableMsg.append('(');
         }
         humanReadableMsg.append(msg.substring(offset, offset + lenID));
-        code128Msg.append(msg.substring(offset, offset + lenID)); //BUG fixed 15.08!!
+        code128Msg.append(msg.substring(offset, offset + lenID)); // BUG fixed 15.08!!
         if (!omitBrackets) {
             humanReadableMsg.append(')');
         }
         boolean doChecksumADD = false;
         int[] startA = new int[ai.type.length + 1];
         startA[0] = offset;
-//        start[1] = offset + lenID;
+        // start[1] = offset + lenID;
         int newOffset = findGroupSeparator(msg, offset);
         if (newOffset < 0) {
             newOffset = msg.length();
         }
         if (newOffset < offset + lenID + lenMin) {
-            if (checksumADD && ai.canDoChecksumADD
-                    && newOffset == offset + lenID + lenMin - 1) {
+            if (checksumADD && ai.canDoChecksumADD && newOffset == offset + lenID + lenMin - 1) {
                 doChecksumADD = true;
             } else if ((ai.fixed || lenMin == lenMax) && newOffset < msg.length()) {
                 throw getException("FNC1 not allowed in fixed length field: \""
-                    + msg.substring(offset + lenID,
-                            Math.min(msg.length(), offset + lenID + lenMax)) + "\"!");
+                        + msg.substring(offset + lenID, Math.min(msg.length(), offset + lenID + lenMax)) + "\"!");
             } else {
                 throw getException("Field \"" + msg.substring(offset + lenID, newOffset)
-                    + "\" too short! Length should be " + lenMin + " at least!");
+                        + "\" too short! Length should be " + lenMin + " at least!");
             }
 
         }
@@ -212,8 +209,7 @@ public class EAN128LogicImpl { //extends Code128LogicImpl{
             if (ai.fixed || lenMin == lenMax) {
                 newOffset = offset + lenID + lenMax;
             } else {
-                throw getException(
-                        "Variable length field \"" + msg.substring(offset + lenID, newOffset)
+                throw getException("Variable length field \"" + msg.substring(offset + lenID, newOffset)
                         + "\" too long! Length should be " + lenMax + " at the most!");
             }
         }
@@ -225,52 +221,53 @@ public class EAN128LogicImpl { //extends Code128LogicImpl{
             } else {
                 end = newOffset - ai.minLenAfterVariableLen;
             }
-//            if (ai.checkDigit[i] != CheckDigit.CDNone && !doChecksumADD && checksumCHECK){
-//                char cd1 = CheckDigit.calcCheckdigit(msg, cdStart, start, ai.checkDigit[i]);
-//                char cd2 = msg.charAt(start);
-//                if (cd1 != cd2)
-//                    throw getException("Checkdigit is wrong! Correct is " + cd1
-//                        + " but I found " + cd2 + "!", msg.substring(cdStart, start));
-//                humanReadableMsg.append(cd1);
-//                code128Msg.append(cd1);
-//            } else if (ai.checkDigit[i] == CheckDigit.CDNone || !doChecksumADD) {
-            if (doChecksumADD && i == ai.type.length - 1) { //ai.checkDigit[i] != CheckDigit.CDNone) {
-                char c = CheckDigit.calcCheckdigit(msg,
-                        startA[ai.checkDigitStart[i]], start, CheckDigit.CD31);
+            // if (ai.checkDigit[i] != CheckDigit.CDNone && !doChecksumADD &&
+            // checksumCHECK){
+            // char cd1 = CheckDigit.calcCheckdigit(msg, cdStart, start, ai.checkDigit[i]);
+            // char cd2 = msg.charAt(start);
+            // if (cd1 != cd2)
+            // throw getException("Checkdigit is wrong! Correct is " + cd1
+            // + " but I found " + cd2 + "!", msg.substring(cdStart, start));
+            // humanReadableMsg.append(cd1);
+            // code128Msg.append(cd1);
+            // } else if (ai.checkDigit[i] == CheckDigit.CDNone || !doChecksumADD) {
+            if (doChecksumADD && i == ai.type.length - 1) { // ai.checkDigit[i] != CheckDigit.CDNone) {
+                char c = CheckDigit.calcCheckdigit(msg, startA[ai.checkDigitStart[i]], start, CheckDigit.CD31);
                 humanReadableMsg.append(c);
                 code128Msg.append(c);
-                if (newOffset < msg.length()
-                    && isGroupSeparator(msg.charAt(newOffset))) {
+                if (newOffset < msg.length() && isGroupSeparator(msg.charAt(newOffset))) {
                     newOffset++;
                 }
             } else {
                 checkType(ai, i, msg, start, end, startA[ai.checkDigitStart[i]]);
-//                humanReadableMsg.append(msg.substring(startI, end));
-//                code128Msg.append(msg.substring(startI, end));
+                // humanReadableMsg.append(msg.substring(startI, end));
+                // code128Msg.append(msg.substring(startI, end));
             }
         }
-//        if (doChecksumADD) {
-//            char c = CheckDigit.calcCheckdigit(msg, cdStart, newOffset, ai.checkDigit[ai.checkDigit.length-1]);
-//            humanReadableMsg.append(c);
-//            code128Msg.append(c);
-//            if (newOffset < msg.length() && msg.charAt(newOffset) == groupSeparator) {
-//                newOffset++;
-//            }
-//        }
-        if (newOffset < msg.length()
-                && isGroupSeparator(msg.charAt(newOffset))) {
-            //TODO Needed for 8001?...
+        // if (doChecksumADD) {
+        // char c = CheckDigit.calcCheckdigit(msg, cdStart, newOffset,
+        // ai.checkDigit[ai.checkDigit.length-1]);
+        // humanReadableMsg.append(c);
+        // code128Msg.append(c);
+        // if (newOffset < msg.length() && msg.charAt(newOffset) == groupSeparator) {
+        // newOffset++;
+        // }
+        // }
+        if (newOffset < msg.length() && isGroupSeparator(msg.charAt(newOffset))) {
+            // TODO Needed for 8001?...
             newOffset++;
-//            code128Msg.append(Code128LogicImpl.FNC_1);
+            // code128Msg.append(Code128LogicImpl.FNC_1);
         }
         if (!ai.fixed && newOffset < msg.length()) {
             code128Msg.append(Code128LogicImpl.FNC_1);
         }
         return newOffset;
-        //TODO check that every id appears only once in the barcode
-        //TODO check that encodedMsg is never larger than 35
-        //TODO check that message never larger than 48 (does this include all groupSeparator?)
-        //TODO show only 13 digits of the EAN in human readable part (if the first digit is '0')
+        // TODO check that every id appears only once in the barcode
+        // TODO check that encodedMsg is never larger than 35
+        // TODO check that message never larger than 48 (does this include all
+        // groupSeparator?)
+        // TODO show only 13 digits of the EAN in human readable part (if the first
+        // digit is '0')
     }
 
     private boolean isGroupSeparator(char ch) {
@@ -280,22 +277,19 @@ public class EAN128LogicImpl { //extends Code128LogicImpl{
     private void checkType(EAN128AI ai, byte idx, String msg, int start, int end, int cdStart) {
         byte type = ai.type[idx];
         if (type == EAN128AI.TYPEError) {
-            throw getException("This AI is not allowed by configuration! ("
-                + ai.toString() + ")");
+            throw getException("This AI is not allowed by configuration! (" + ai.toString() + ")");
 
         } else if (type == EAN128AI.TYPEAlpha) {
             for (int i = end - 1; i >= start; i--) {
                 if (msg.charAt(i) > 128 || Character.isDigit(msg.charAt(i))) {
-                    throw getException("Character \'" + msg.charAt(i)
-                            + "\' must be a valid ASCII byte but not number!",
+                    throw getException("Character \'" + msg.charAt(i) + "\' must be a valid ASCII byte but not number!",
                             msg.substring(start, i));
                 }
             }
         } else if (type == EAN128AI.TYPEAlphaNum) {
             for (int i = end - 1; i >= start; i--) {
                 if (msg.charAt(i) > 128) {
-                    throw getException("Character \'" + msg.charAt(i)
-                            + "\' must be a valid ASCII byte!",
+                    throw getException("Character \'" + msg.charAt(i) + "\' must be a valid ASCII byte!",
                             msg.substring(start, i));
                 }
             }
@@ -307,8 +301,7 @@ public class EAN128LogicImpl { //extends Code128LogicImpl{
                     cd2 = cd1;
                 }
                 if (cd1 != cd2) {
-                    throw getException("Checkdigit is wrong! Correct is " + cd1
-                        + " but I found " + cd2 + "!");
+                    throw getException("Checkdigit is wrong! Correct is " + cd1 + " but I found " + cd2 + "!");
                 }
                 humanReadableMsg.append(cd1);
                 code128Msg.append(cd1);
@@ -316,23 +309,17 @@ public class EAN128LogicImpl { //extends Code128LogicImpl{
             }
             for (int i = end - 1; i >= start; i--) {
                 if (!Character.isDigit(msg.charAt(i))) {
-                    throw getException("Character \'" + msg.charAt(i)
-                        + "\' must be a Digit!",
-                        msg.substring(start, i));
+                    throw getException("Character \'" + msg.charAt(i) + "\' must be a Digit!", msg.substring(start, i));
                 }
             }
             if (type == EAN128AI.TYPENumDate) {
                 char cm1 = msg.charAt(start + 2), cm2 = msg.charAt(start + 3);
                 char cd1 = msg.charAt(start + 4), cd2 = msg.charAt(start + 5);
-                if ((cm1 == '0' && cm2 == '0')
-                        || (cm1 == '1' && cm2 > '2')
-                        || cm1 > '1') {
-                    throw getException("Illegal Month \"" + cm1 + cm2 + "\"!",
-                        msg.substring(start, start + 2));
+                if ((cm1 == '0' && cm2 == '0') || (cm1 == '1' && cm2 > '2') || cm1 > '1') {
+                    throw getException("Illegal Month \"" + cm1 + cm2 + "\"!", msg.substring(start, start + 2));
                 }
                 if ((cd1 == '3' && cd2 > '1') || cd1 > '3') {
-                    throw getException("Illegal Day \"" + cd1 + cd2 + "\"!",
-                        msg.substring(start, start + 4));
+                    throw getException("Illegal Day \"" + cd1 + cd2 + "\"!", msg.substring(start, start + 4));
                 }
             }
         }
@@ -362,13 +349,11 @@ public class EAN128LogicImpl { //extends Code128LogicImpl{
             msgOk = "";
         }
         if (humanReadableMsg.length() > 1 || msgOk.length() > 0) {
-            text = text + " Accepted start of Message: \""
-                + humanReadableMsg.toString() + msgOk + "\"";
+            text = text + " Accepted start of Message: \"" + humanReadableMsg.toString() + msgOk + "\"";
         }
         exception = new IllegalArgumentException(text);
         return exception;
     }
-
 
     public String getCode128Msg() {
         return code128Msg.toString();
@@ -396,10 +381,11 @@ public class EAN128LogicImpl { //extends Code128LogicImpl{
         } else {
             checksumADD = false;
             checksumCHECK = false;
-            //Shouldn't happen because of validateMessage
+            // Shouldn't happen because of validateMessage
             throw new RuntimeException("Internal error");
         }
     }
+
     /**
      * @return
      */
@@ -434,6 +420,7 @@ public class EAN128LogicImpl { //extends Code128LogicImpl{
         }
         ais = newTemplates;
     }
+
     /**
      * @return
      */
